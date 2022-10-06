@@ -9,7 +9,11 @@
   },
   "author": "Sayed hany",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "core-js": "^3.25.5",
+    "fractional": "^1.0.0",
+    "regenerator-runtime": "^0.13.9"
+  },
   "devDependencies": {
     "@parcel/transformer-sass": "^2.7.0",
     "parcel": "^2.0.0",
