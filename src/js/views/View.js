@@ -6,9 +6,33 @@ export default class View {
     if (!data || (Array.isArray(data) && data.length === 0))
       return this.renderError();
     this._data = data;
-    this._clear();
     const markup = this._generateMarkup();
+    this._clear();
     this._parentElement.insertAdjacentHTML('afterbegin', markup);
+  }
+  update(data) {
+    this._data = data;
+    const newMarkup = this._generateMarkup();
+    const newDOM = document.createRange().createContextualFragment(newMarkup);
+    const newElement = Array.from(newDOM.querySelectorAll('*'));
+    const curElement = Array.from(this._parentElement.querySelectorAll('*'));
+    // console.log(curElement);
+    newElement.forEach((newEL, i) => {
+      const curEL = curElement[i];
+      if (
+        !newEL.isEqualNode(curEL) &&
+        newEL.firstChild?.nodeValue.trim() !== ''
+      ) {
+        console.log(curEL, newEL.isEqualNode(curEL));
+        curEL.textContent = newEL.textContent;
+      }
+      if (!newEL.isEqualNode(curEL)) {
+        // console.log(Array.from(newEL.attributes));
+        Array.from(newEL.attributes).forEach(attr =>
+          curEL.setAttribute(attr.name, attr.value)
+        );
+      }
+    });
   }
   _clear() {
     this._parentElement.innerHTML = '';
