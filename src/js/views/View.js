@@ -23,7 +23,7 @@ export default class View {
         !newEL.isEqualNode(curEL) &&
         newEL.firstChild?.nodeValue.trim() !== ''
       ) {
-        console.log(curEL, newEL.isEqualNode(curEL));
+        // console.log(curEL, newEL.isEqualNode(curEL));
         curEL.textContent = newEL.textContent;
       }
       if (!newEL.isEqualNode(curEL)) {

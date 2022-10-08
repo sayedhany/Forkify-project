@@ -1,6 +1,7 @@
 import { API_URL } from './config.js';
 import { getJSON } from './helpers.js';
 import { RES_PER_PAGE } from './config.js';
+import { FALSE } from 'sass';
 export const state = {
   recipe: {},
   search: {
@@ -9,6 +10,7 @@ export const state = {
     resultsPerPage: RES_PER_PAGE,
     page: 1,
   },
+  bookmarks: [],
 };
 export const loadRecipe = async function (id) {
   try {
@@ -25,6 +27,9 @@ export const loadRecipe = async function (id) {
       cookingTime: recipe.cooking_time,
       ingredients: recipe.ingredients,
     };
+    if (state.bookmarks.some(bookmark => bookmark.id === id))
+      state.recipe.bookmarked = true;
+    else state.recipe.bookmarked = false;
     console.log(state.recipe);
   } catch (err) {
     console.error(`${err}`);
@@ -45,6 +50,7 @@ export const leadSearchResults = async function (query) {
         image: rec.image_url,
       };
     });
+    state.search.page = 1;
     // console.log(state.search);
   } catch (err) {
     console.log(err);
@@ -65,4 +71,15 @@ export const updateServings = function (newServings) {
     ing.quantity = (ing.quantity * newServings) / state.recipe.servings;
   });
   state.recipe.servings = newServings;
+};
+
+export const addBookmark = function (recipe) {
+  state.bookmarks.push(recipe);
+  if (recipe.id === state.recipe.id) state.recipe.bookmarked = true;
+};
+
+export const deleteBookmark = function (id) {
+  const index = state.bookmarks.findIndex(el => el.id === id);
+  state.bookmarks.splice(index, 1);
+  if (id === state.recipe.id) state.recipe.bookmarked = false;
 };
